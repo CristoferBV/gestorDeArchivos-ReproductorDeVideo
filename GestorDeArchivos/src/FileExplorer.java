@@ -25,7 +25,7 @@ public class FileExplorer extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
-        JLabel lblFileName = new JLabel("File Name:");
+        JLabel lblFileName = new JLabel("File Path:");
         txtFileName = new JTextField(20);
 
         JLabel lblContent = new JLabel("Content:");
@@ -93,7 +93,7 @@ public class FileExplorer extends JFrame {
         String content = txtContent.getText();
 
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Choose Directory to Save File");
+        fileChooser.setDialogTitle("Elija el directorio para guardar el archivo");
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int result = fileChooser.showSaveDialog(this);
 
@@ -106,9 +106,9 @@ public class FileExplorer extends JFrame {
                 FileWriter writer = new FileWriter(outputFile);
                 writer.write(content);
                 writer.close();
-                JOptionPane.showMessageDialog(this, "File created successfully.");
+                JOptionPane.showMessageDialog(this, "Archivo creado con exito.");
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error creating file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error al crear el archivo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -136,7 +136,7 @@ public class FileExplorer extends JFrame {
                 bufferedReader.close();
                 txtContent.setText(sb.toString());
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error opening file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error al abrir archivo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -151,7 +151,7 @@ public class FileExplorer extends JFrame {
 
     private void moveFile() {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Select File to Move");
+        fileChooser.setDialogTitle("Seleccionar archivo para mover");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int result = fileChooser.showOpenDialog(this);
 
@@ -159,7 +159,7 @@ public class FileExplorer extends JFrame {
             File selectedFile = fileChooser.getSelectedFile();
 
             JFileChooser destinationChooser = new JFileChooser();
-            destinationChooser.setDialogTitle("Select Destination Folder");
+            destinationChooser.setDialogTitle("Seleccionar carpeta de destino");
             destinationChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             int destinationResult = destinationChooser.showOpenDialog(this);
 
@@ -169,9 +169,9 @@ public class FileExplorer extends JFrame {
 
                 try {
                     Files.move(selectedFile.toPath(), Paths.get(destinationPath, selectedFile.getName()));
-                    JOptionPane.showMessageDialog(this, "File moved successfully.");
+                    JOptionPane.showMessageDialog(this, "El archivo se movió con exito.");
                 } catch (IOException e) {
-                    JOptionPane.showMessageDialog(this, "Error moving file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Error al mover el archivo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -206,22 +206,22 @@ public class FileExplorer extends JFrame {
                 }
 
                 JOptionPane.showMessageDialog(this, "File attributes:\n"
-                        + "Creation Time: " + attributes.creationTime() + "\n"
-                        + "Last Accessed Time: " + attributes.lastAccessTime() + "\n"
-                        + "Last Modified Time: " + attributes.lastModifiedTime() + "\n"
-                        + "Is Directory: " + attributes.isDirectory() + "\n"
-                        + "Is Regular File: " + attributes.isRegularFile() + "\n"
-                        + "Is Symbolic Link: " + attributes.isSymbolicLink() + "\n"
-                        + "Size: " + sizeString);
+                        + "Tiempo de creación: " + attributes.creationTime() + "\n"
+                        + "Última hora de acceso: " + attributes.lastAccessTime() + "\n"
+                        + "Hora de última modificación: " + attributes.lastModifiedTime() + "\n"
+                        + "Es directorio: " + attributes.isDirectory() + "\n"
+                        + "Es un archivo regular: " + attributes.isRegularFile() + "\n"
+                        + "Es enlace simbólico: " + attributes.isSymbolicLink() + "\n"
+                        + "Peso: " + sizeString);
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error reading file attributes: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error al leer los atributos del archivo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
     private void deleteFile() {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Select File to Delete");
+        fileChooser.setDialogTitle("Seleccionar archivo para eliminar");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int result = fileChooser.showOpenDialog(this);
 
@@ -231,9 +231,9 @@ public class FileExplorer extends JFrame {
 
             try {
                 Files.deleteIfExists(Paths.get(fileName));
-                JOptionPane.showMessageDialog(this, "File deleted successfully.");
+                JOptionPane.showMessageDialog(this, "Archivo eliminado con éxito.");
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error deleting file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error al eliminar el archivo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
