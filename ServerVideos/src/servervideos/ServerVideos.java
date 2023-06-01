@@ -1,8 +1,8 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-package com.mycompany.reproductordevideo;
+package servervideos;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -17,7 +17,7 @@ import java.net.Socket;
  *
  * @author maria
  */
-public class Server {
+public class ServerVideos {
     public static void main(String[] args) {
         try {
             ServerSocket serverSocket = new ServerSocket(5000);
@@ -56,7 +56,7 @@ class VideoHandler implements Runnable {
             String selectedVideo = (String) inputStream.readObject();
 
             // Enviar video al cliente
-            File videoFile = new File("videos/" + selectedVideo); // Ruta relativa a la carpeta "videos" dentro del proyecto
+            File videoFile = new File(selectedVideo); // Ruta relativa a la carpeta "videos" dentro del proyecto
             byte[] videoBytes = new byte[(int) videoFile.length()];
             FileInputStream fileInputStream = new FileInputStream(videoFile);
             BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
