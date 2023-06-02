@@ -51,7 +51,8 @@ public class Client extends Application {
         playButton = new Button("Reproducir");
         playButton.setDisable(true);
         playButton.setOnAction(event -> {
-            String selectedVideo = videoListView.getSelectionModel().getSelectedItem();
+            String selectedVideo = videoListView.getSelectionModel()
+                    .getSelectedItem();
             if (selectedVideo != null) {
                 playVideo(selectedVideo);
             }
@@ -73,15 +74,20 @@ public class Client extends Application {
         new Thread(() -> {
             try {
                 clientSocket = new Socket("localhost", 5000);
-                inputStream = new DataInputStream(clientSocket.getInputStream());
-                outputStream = new DataOutputStream(clientSocket.getOutputStream());
+                inputStream = new DataInputStream
+                    (clientSocket.getInputStream());
+                outputStream = new DataOutputStream
+                    (clientSocket.getOutputStream());
 
                 // Recibir lista de videos del servidor
                 try {
-                    ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-                    String[] videoList = (String[]) objectInputStream.readObject();
+                    ObjectInputStream objectInputStream = new ObjectInputStream
+                        (inputStream);
+                    String[] videoList = (String[]) objectInputStream
+                            .readObject();
                     Platform.runLater(() -> {
-                        ObservableList<String> items = FXCollections.observableArrayList(videoList);
+                        ObservableList<String> items = 
+                                FXCollections.observableArrayList(videoList);
                         videoListView.setItems(items);
                         playButton.setDisable(false);
                     });
@@ -101,12 +107,14 @@ public class Client extends Application {
 
                 System.out.println("Solicitando video" + videoName);
 
-                ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+                ObjectOutputStream outputStream = new ObjectOutputStream
+                    (clientSocket.getOutputStream());
                 outputStream.writeObject(videoName);
                 outputStream.flush();
                 int bytes = 0;
 
-               File videoFile = new File("C:\\Users\\maria\\OneDrive\\Documentos\\Nueva carpeta\\video.mp4");
+               File videoFile = new File("C:\\Users\\maria\\OneDrive\\"
+                       + "Documentos\\Nueva carpeta\\video.mp4");
                 videoFile.getParentFile().mkdirs();
                 videoFile.setWritable(true);
  
@@ -114,7 +122,8 @@ public class Client extends Application {
                 FileOutputStream fileOutputStream
                         = new FileOutputStream(videoFile);
                 
-                DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream());
+                DataInputStream dataInputStream = new DataInputStream
+                    (clientSocket.getInputStream());
                 long size
                         = dataInputStream.readLong(); // read file size
                 byte[] buffer = new byte[4 * 1024];
@@ -134,42 +143,39 @@ public class Client extends Application {
 
             dataInputStream.close();
                  fileOutputStream.close();
-
-//                // Recibir video del servidor
-//                byte[] videoBytes = new byte[8192];
-//                File videoFile = new File(videoName);
-//                FileOutputStream fileOutputStream = new FileOutputStream(videoFile);
-//                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-//
-//                int bytesRead;
-//                while ((bytesRead = inputStream.read(videoBytes)) != -1) {
-//                    bufferedOutputStream.write(videoBytes, 0, bytesRead);
-//                }
-//
-            
+//  
                 Platform.runLater(() -> {
                     Media media = new Media(videoFile.toURI().toString());
                     MediaPlayer mediaPlayer = new MediaPlayer(media);
-                    mediaPlayer.setAutoPlay(true);
 
-                    mediaPlayer.setOnReady(() -> {
-                        Stage videoStage = new Stage();
-                        videoStage.setTitle("Reproductor de Video");
-                        MediaView mediaView = new MediaView(mediaPlayer);
-                        mediaView.fitWidthProperty().bind(videoStage.widthProperty());
-                        mediaView.fitHeightProperty().bind(videoStage.heightProperty());
-
-                        StackPane root = new StackPane(mediaView);
-                        Scene videoScene = new Scene(root, 800, 600);
-                        videoStage.setScene(videoScene);
-                        videoStage.show();
+                    mediaPlayer.setOnError(() -> {
+                        System.out.println("Error al cargar el video: " 
+                                + media.getError());
                     });
+
+                    mediaPlayer.setOnPlaying(() -> {
+                        System.out.println("Reproducción iniciada");
+                    });
+
+                    mediaPlayer.setOnEndOfMedia(() -> {
+                        System.out.println("Reproducción finalizada");
+                    }); 
+                    
+                    Stage videoStage = new Stage();
+                    videoStage.setTitle("Reproductor de Video");
+                    MediaView mediaView = new MediaView(mediaPlayer);
+                    mediaView.fitWidthProperty().bind
+                        (videoStage.widthProperty());
+                    mediaView.fitHeightProperty().bind
+                        (videoStage.heightProperty());
+
+                    StackPane root = new StackPane(mediaView);
+                    Scene videoScene = new Scene(root, 800, 600);
+                    videoStage.setScene(videoScene);
+                    videoStage.show();
+
+                    mediaPlayer.play();
                 });
-//
-//                System.out.println("Video recibido y reproducido.");
-//
-//                 Eliminar el video después de reproducirlo
-//                videoFile.delete();
             } catch (IOException e) {
                 e.printStackTrace();
             }

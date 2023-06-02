@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
+
 package servervideos;
 
 import java.io.BufferedInputStream;
@@ -27,7 +24,8 @@ public class ServerVideos {
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("Cliente conectado desde: " + clientSocket.getInetAddress().getHostName());
+                System.out.println("Cliente conectado desde: " + clientSocket
+                        .getInetAddress().getHostName());
 
                 Thread thread = new Thread(new VideoHandler(clientSocket));
                 thread.start();
@@ -49,11 +47,14 @@ class VideoHandler implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("Conectado: " + clientSocket.getInetAddress().getHostName());
+            System.out.println("Conectado: " + clientSocket.getInetAddress()
+                    .getHostName());
 
             // Enviar lista de videos al cliente
-            ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-            String[] videoList = {"video1.mp4"};
+            ObjectOutputStream outputStream = new ObjectOutputStream
+                (clientSocket.getOutputStream());
+            String[] videoList = {"video1.mp4","video2.mp4","video3.mp4",
+                "video4.mp4","video5.mp4"};
             outputStream.writeObject(videoList);
 
             while (true) {
@@ -63,21 +64,11 @@ class VideoHandler implements Runnable {
 
                         if (clientSocket.getInputStream().available() > 0) {
                             // Recibir solicitud del cliente
-                            ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
-                            String selectedVideo = (String) inputStream.readObject();
-//      
-//                      
-//                            // Enviar video al cliente
-//                            File videoFile = new File(selectedVideo); // Ruta relativa a la carpeta "videos" dentro del proyecto
-//                            byte[] videoBytes = new byte[(int) videoFile.length()];
-//                            FileInputStream fileInputStream = new FileInputStream(videoFile);
-//                            BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
-//                            bufferedInputStream.read(videoBytes, 0, videoBytes.length);
-//                            bufferedInputStream.close();
-//                            outputStream.write(videoBytes, 0, videoBytes.length);
-//                            outputStream.flush();
-//
-//                            System.out.println("Video enviado al cliente.");
+                            ObjectInputStream inputStream = new ObjectInputStream
+                                (clientSocket.getInputStream());
+                            String selectedVideo = (String) inputStream
+                                    .readObject();
+                            
                             int bytes = 0;
                            
                             // Open the File where he located in your pc
@@ -85,7 +76,8 @@ class VideoHandler implements Runnable {
                              System.out.println(file.length());
                             FileInputStream fileInputStream
                                     = new FileInputStream(file);
-                             DataOutputStream    dataOutputStream = new      DataOutputStream(clientSocket.getOutputStream());
+                             DataOutputStream    dataOutputStream = new 
+                                DataOutputStream(clientSocket.getOutputStream());
                             // Here we send the File to Server
                             dataOutputStream.writeLong(file.length());
                             // Here we  break file into chunks
