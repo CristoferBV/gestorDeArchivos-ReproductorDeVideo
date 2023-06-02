@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -32,6 +33,7 @@ import javafx.scene.layout.StackPane;
  * @author maria
  */
 public class Client extends Application {
+
     private Socket clientSocket;
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
@@ -84,7 +86,6 @@ public class Client extends Application {
                         playButton.setDisable(false);
                     });
 
-                    objectInputStream.close();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -97,24 +98,55 @@ public class Client extends Application {
     private void playVideo(String videoName) {
         new Thread(() -> {
             try {
-                // Enviar solicitud de reproducción al servidor
-                outputStream.writeUTF(videoName);
+
+                System.out.println("Solicitando video" + videoName);
+
+                ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+                outputStream.writeObject(videoName);
                 outputStream.flush();
+                int bytes = 0;
 
-                // Recibir video del servidor
-                byte[] videoBytes = new byte[8192];
-                File videoFile = new File(videoName);
-                FileOutputStream fileOutputStream = new FileOutputStream(videoFile);
-                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+               File videoFile = new File("C:\\Users\\maria\\OneDrive\\Documentos\\Nueva carpeta\\video.mp4");
+                videoFile.getParentFile().mkdirs();
+                videoFile.setWritable(true);
+ 
+            
+                FileOutputStream fileOutputStream
+                        = new FileOutputStream(videoFile);
+                
+                DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream());
+                long size
+                        = dataInputStream.readLong(); // read file size
+                byte[] buffer = new byte[4 * 1024];
 
-                int bytesRead;
-                while ((bytesRead = inputStream.read(videoBytes)) != -1) {
-                    bufferedOutputStream.write(videoBytes, 0, bytesRead);
+                System.out.println(size);
+                while (size > 0
+                        && (bytes = dataInputStream.read(
+                                buffer, 0,
+                                (int) Math.min(buffer.length, size)))
+                        != -1) {
+                    // Here we write the file using write method
+                    fileOutputStream.write(buffer, 0, bytes);
+                    size -= bytes; // read upto file size
                 }
+                // Here we received file
+                System.out.println("File is Received");
 
-                bufferedOutputStream.close();
+            dataInputStream.close();
+                 fileOutputStream.close();
 
-                // Reproducir video en un reproductor multimedia (por ejemplo, JavaFX MediaPlayer)
+//                // Recibir video del servidor
+//                byte[] videoBytes = new byte[8192];
+//                File videoFile = new File(videoName);
+//                FileOutputStream fileOutputStream = new FileOutputStream(videoFile);
+//                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+//
+//                int bytesRead;
+//                while ((bytesRead = inputStream.read(videoBytes)) != -1) {
+//                    bufferedOutputStream.write(videoBytes, 0, bytesRead);
+//                }
+//
+            
                 Platform.runLater(() -> {
                     Media media = new Media(videoFile.toURI().toString());
                     MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -133,11 +165,11 @@ public class Client extends Application {
                         videoStage.show();
                     });
                 });
-
-                System.out.println("Video recibido y reproducido.");
-
-                // Eliminar el video después de reproducirlo
-                videoFile.delete();
+//
+//                System.out.println("Video recibido y reproducido.");
+//
+//                 Eliminar el video después de reproducirlo
+//                videoFile.delete();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -147,12 +179,15 @@ public class Client extends Application {
     @Override
     public void stop() {
         try {
-            if (outputStream != null)
+            if (outputStream != null) {
                 outputStream.close();
-            if (inputStream != null)
+            }
+            if (inputStream != null) {
                 inputStream.close();
-            if (clientSocket != null)
+            }
+            if (clientSocket != null) {
                 clientSocket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
