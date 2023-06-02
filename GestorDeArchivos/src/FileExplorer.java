@@ -19,7 +19,7 @@ public class FileExplorer extends JFrame {
 
     public FileExplorer() {
         setTitle("File Explorer");
-        setSize(565, 400);
+        setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
