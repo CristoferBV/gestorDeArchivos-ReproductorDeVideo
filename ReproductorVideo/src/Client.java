@@ -69,7 +69,7 @@ public class Client {
     private void connectToServer() {
         new Thread(() -> {
             try {
-                clientSocket = new Socket("192.168.0.5", 5000);
+                clientSocket = new Socket("192.168.0.9", 5000);
                 inputStream = new DataInputStream(clientSocket.getInputStream());
                 outputStream = new DataOutputStream(clientSocket.getOutputStream());
 
