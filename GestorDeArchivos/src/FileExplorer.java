@@ -18,7 +18,7 @@ public class FileExplorer extends JFrame {
     private JButton btnCreate, btnOpen, btnMove, btnAttributes, btnDelete;
 
     public FileExplorer() {
-        setTitle("File Explorer");
+        setTitle("Explorador de Archivos");
         setSize(565, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -26,22 +26,22 @@ public class FileExplorer extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
-        JLabel lblFileName = new JLabel("File Name:");
+        JLabel lblFileName = new JLabel("Nombre de Archivo:");
         txtFileName = new JTextField(45);
 
-        JLabel lblFilePath = new JLabel("  File Path:");
+        JLabel lblFilePath = new JLabel(" Ruta de Archivo:");
         txtFilePath = new JTextField(45);
 
-        JLabel lblContent = new JLabel("Content:");
+        JLabel lblContent = new JLabel("Contenido:");
         txtContent = new JTextArea(15, 40);
         txtContent.setLineWrap(true);
         JScrollPane scrollPane = new JScrollPane(txtContent);
 
-        btnCreate = new JButton("Create File");
-        btnOpen = new JButton("Open File");
-        btnMove = new JButton("Move File");
-        btnAttributes = new JButton("File Attributes");
-        btnDelete = new JButton("Delete File");
+        btnCreate = new JButton("Crear Archivo");
+        btnOpen = new JButton("Abrir Archivo");
+        btnMove = new JButton("Mover Archivo");
+        btnAttributes = new JButton("Atributo");
+        btnDelete = new JButton("Eliminar Archivo");
 
         btnCreate.addActionListener(new ActionListener() {
             @Override
@@ -98,7 +98,8 @@ public class FileExplorer extends JFrame {
         String content = txtContent.getText();
 
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Elija el directorio para guardar el archivo");
+        fileChooser.setDialogTitle("Elija el directorio para guardar "
+                + "el archivo");
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int result = fileChooser.showSaveDialog(this);
 
@@ -115,9 +116,12 @@ public class FileExplorer extends JFrame {
                 // Limpiar los campos de texto
                 txtFileName.setText("");
                 
-                JOptionPane.showMessageDialog(this, "Archivo creado con exito.");
+                JOptionPane.showMessageDialog(this, "Archivo creado "
+                        + "con exito.");
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error al crear el archivo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error al crear "
+                        + "el archivo: " + e.getMessage(), "Error", 
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -146,14 +150,16 @@ public class FileExplorer extends JFrame {
                 bufferedReader.close();
                 txtContent.setText(sb.toString());
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error al abrir archivo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error al abrir archivo: " 
+                        + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
     private String getFileExtension(String fileName) {
         int dotIndex = fileName.lastIndexOf(".");
-        if (dotIndex == -1 || dotIndex == 0 || dotIndex == fileName.length() - 1) {
+        if (dotIndex == -1 || dotIndex == 0 || dotIndex == fileName.length
+        () - 1) {
             return "";
         }
         return fileName.substring(dotIndex + 1);
@@ -170,7 +176,8 @@ public class FileExplorer extends JFrame {
 
             JFileChooser destinationChooser = new JFileChooser();
             destinationChooser.setDialogTitle("Seleccionar carpeta de destino");
-            destinationChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            destinationChooser.setFileSelectionMode(JFileChooser
+                    .DIRECTORIES_ONLY);
             int destinationResult = destinationChooser.showOpenDialog(this);
 
             if (destinationResult == JFileChooser.APPROVE_OPTION) {
@@ -178,10 +185,14 @@ public class FileExplorer extends JFrame {
                 String destinationPath = destinationFolder.getAbsolutePath();
 
                 try {
-                    Files.move(selectedFile.toPath(), Paths.get(destinationPath, selectedFile.getName()));
-                    JOptionPane.showMessageDialog(this, "El archivo se movió con exito.");
+                    Files.move(selectedFile.toPath(), Paths.get(destinationPath,
+                            selectedFile.getName()));
+                    JOptionPane.showMessageDialog(this, "El archivo se movió"
+                            + " con exito.");
                 } catch (IOException e) {
-                    JOptionPane.showMessageDialog(this, "Error al mover el archivo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Error al mover "
+                            + "el archivo: " + e.getMessage(), "Error", 
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -197,7 +208,8 @@ public class FileExplorer extends JFrame {
             File selectedFile = fileChooser.getSelectedFile();
 
             try {
-                BasicFileAttributes attributes = Files.readAttributes(selectedFile.toPath(), BasicFileAttributes.class);
+                BasicFileAttributes attributes = Files.readAttributes
+                (selectedFile.toPath(), BasicFileAttributes.class);
 
                 long size = attributes.size();
                 String sizeString;
@@ -216,15 +228,24 @@ public class FileExplorer extends JFrame {
                 }
 
                 JOptionPane.showMessageDialog(this, "Atributos de archivo:\n"
-                        + "Tiempo de creación: " + attributes.creationTime() + "\n"
-                        + "Última hora de acceso: " + attributes.lastAccessTime() + "\n"
-                        + "Hora de última modificación: " + attributes.lastModifiedTime() + "\n"
-                        + "Es directorio: " + attributes.isDirectory() + "\n"
-                        + "Es un archivo regular: " + attributes.isRegularFile() + "\n"
-                        + "Es enlace simbólico: " + attributes.isSymbolicLink() + "\n"
+                        + "Tiempo de creación: " 
+                        + attributes.creationTime() + "\n"
+                        + "Última hora de acceso: " 
+                        + attributes.lastAccessTime() + "\n"
+                        + "Hora de última modificación: " 
+                        + attributes.lastModifiedTime() + "\n"
+                        + "Es directorio: " 
+                        + attributes.isDirectory() + "\n"
+                        + "Es un archivo regular: " 
+                        + attributes.isRegularFile() + "\n"
+                        + "Es enlace simbólico: " 
+                        + attributes.isSymbolicLink() + "\n"
                         + "Peso: " + sizeString);
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error al leer los atributos del archivo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, 
+                        "Error al leer los atributos del archivo: "
+                                + e.getMessage(), "Error", 
+                                JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -247,9 +268,12 @@ public class FileExplorer extends JFrame {
                 txtFilePath.setText("");
                 txtContent.setText("");
                 
-                JOptionPane.showMessageDialog(this, "Archivo eliminado con éxito.");
+                JOptionPane.showMessageDialog(this, "Archivo eliminado "
+                        + "con éxito.");
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error al eliminar el archivo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error al eliminar "
+                        + "el archivo: " + e.getMessage(), "Error", 
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
