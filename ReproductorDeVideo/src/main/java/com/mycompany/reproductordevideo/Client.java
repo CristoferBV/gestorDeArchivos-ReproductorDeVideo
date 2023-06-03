@@ -122,15 +122,14 @@ public class Client extends Application {
                 FileOutputStream fileOutputStream
                         = new FileOutputStream(videoFile);
                 
-                DataInputStream dataInputStream = new DataInputStream
-                    (clientSocket.getInputStream());
+           
                 long size
-                        = dataInputStream.readLong(); // read file size
+                        = inputStream.readLong(); // read file size
                 byte[] buffer = new byte[4 * 1024];
 
                 System.out.println(size);
                 while (size > 0
-                        && (bytes = dataInputStream.read(
+                        && (bytes = inputStream.read(
                                 buffer, 0,
                                 (int) Math.min(buffer.length, size)))
                         != -1) {
@@ -141,7 +140,7 @@ public class Client extends Application {
                 // Here we received file
                 System.out.println("File is Received");
 
-            dataInputStream.close();
+           // inputStream.close();
                  fileOutputStream.close();
 //  
                 Platform.runLater(() -> {

@@ -92,9 +92,10 @@ class VideoHandler implements Runnable {
                             fileInputStream.close();
 
                             // Cerrar conexiones
-                            outputStream.close();
-                            inputStream.close();
-                            clientSocket.close();
+                            
+                            //outputStream.close();
+                            //inputStream.close();
+                            //clientSocket.close();
 
                         }
 
